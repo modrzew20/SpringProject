@@ -6,12 +6,15 @@ import com.example.springproject.model.Region;
 import com.example.springproject.repository.CourierRepo;
 import com.example.springproject.repository.PackageRepo;
 import com.example.springproject.repository.RegionRepo;
+import com.example.springproject.repository.repositoryExceptions.ItemNotFound;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegion;
-import com.example.springproject.service.serviceExceptions.RegionNotFoundException;
+import com.example.springproject.repository.repositoryExceptions.PackageNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -26,27 +29,29 @@ public class PackageService {
     @Autowired
     CourierRepo courierRepo;
 
-    public List<Package> all() {
-        return packageRepo.getArrayList();
+    public List<Package> allPackage() {
+        return packageRepo.all();
     }
 
-    public boolean create(double x_coords, double y_coords) throws RegionNotFoundException, NoCourierForThisRegion {
-        Region region = (assignPackageToRegion(x_coords,y_coords));
-        Courier courier = courierRepo.getCourier(region);
-        return packageRepo.createElement(new Package(null,x_coords,y_coords,courier));
+    public boolean createPackage(double x_coords, double y_coords) throws ItemNotFound, NoCourierForThisRegion{
+        Region region = (regionRepo.findRegionForPackage(x_coords,y_coords));
+        Courier courier = courierRepo.getCourierForRegion(region);
+        return packageRepo.create(new Package(null,x_coords,y_coords,courier));
     }
 
-    private Region assignPackageToRegion(double x_coords, double y_coords) throws RegionNotFoundException {
-        for (Region region : regionRepo.getArrayList()) {
-
-            // TODO add -+ -- +- || (sign of coordinates)
-            if (region.getN_limit() < y_coords
-                    && region.getS_limit() < y_coords
-                        && region.getE_limit() > x_coords
-                            && region.getW_limit() > x_coords) return region;
-        }
-        throw new RegionNotFoundException("Region doesn't exist for this package");
+    public boolean deletePackage(UUID packageUUID) throws PackageNotFound {
+        return packageRepo.delete(packageUUID);
     }
+
+    public Package findPackage(UUID packageUUID) throws PackageNotFound {
+        return packageRepo.find(packageUUID);
+    }
+
+    ArrayList<Package> getPackagesAssignToCourier(UUID courierUUID){
+        return packageRepo.couriersPackage(courierUUID);
+    }
+
+
 
 
 }

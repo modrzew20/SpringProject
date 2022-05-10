@@ -1,9 +1,9 @@
 package com.example.springproject.controllers;
 
 import com.example.springproject.model.Package;
+import com.example.springproject.repository.repositoryExceptions.ItemNotFound;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegion;
 import com.example.springproject.service.PackageService;
-import com.example.springproject.service.serviceExceptions.RegionNotFoundException;
 import lombok.NonNull;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class PackageEndpoint {
 
     @GetMapping("/packages")
     List<Package> all() {
-        return packageService.all();
+        return packageService.allPackage();
     }
 
     @PostMapping("/packages")
@@ -29,8 +29,8 @@ public class PackageEndpoint {
             @RequestParam @NonNull double y_coords) {
         boolean status;
         try {
-            status = packageService.create(x_coords,y_coords);
-        } catch (RegionNotFoundException | NoCourierForThisRegion e ) {
+            status = packageService.createPackage(x_coords,y_coords);
+        } catch (NoCourierForThisRegion | ItemNotFound e ) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(201).build();

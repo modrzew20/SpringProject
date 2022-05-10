@@ -9,7 +9,6 @@ import java.util.UUID;
 @Builder
 public class Package {
 
-
     @Generated
     @Getter
     UUID uuid;

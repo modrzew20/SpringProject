@@ -1,8 +1,6 @@
 package com.example.springproject.model;
 
 import lombok.*;
-
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,6 +10,12 @@ public class Courier {
     @Generated
     @Getter
     UUID uuid;
+
+    @Getter @Setter @NonNull
+    double startPointX;
+
+    @Getter @Setter @NonNull
+    double startPointY;
 
     @Getter @Setter @NonNull
     Region region;
