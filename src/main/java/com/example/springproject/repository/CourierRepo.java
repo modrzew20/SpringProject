@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Repository
-public class CourierRepo {
+public class CourierRepo implements AbstractRepo<Courier>{
 
     ArrayList<Courier> allCourier;
 

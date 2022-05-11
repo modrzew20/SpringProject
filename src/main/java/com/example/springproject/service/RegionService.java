@@ -3,7 +3,6 @@ package com.example.springproject.service;
 import com.example.springproject.model.Region;
 import com.example.springproject.repository.RegionRepo;
 import com.example.springproject.repository.repositoryExceptions.CantCreateRegion;
-import com.example.springproject.repository.repositoryExceptions.ItemNotFound;
 import com.example.springproject.repository.repositoryExceptions.RegionNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

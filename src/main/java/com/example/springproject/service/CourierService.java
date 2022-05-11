@@ -20,7 +20,7 @@ public class CourierService {
     @Autowired
     RegionRepo regionRepo;
 
-    ArrayList<Courier> allCourier () {
+    public ArrayList<Courier> allCourier () {
         return courierRepo.all();
     }
 

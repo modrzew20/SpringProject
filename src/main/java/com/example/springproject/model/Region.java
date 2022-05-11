@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
+@ToString
 public class Region {
 
     @Generated @Getter

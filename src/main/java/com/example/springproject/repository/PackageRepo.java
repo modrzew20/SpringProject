@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Repository
-public class PackageRepo {
+public class PackageRepo implements AbstractRepo<Package> {
     ArrayList<Package> allPackege;
 
     public ArrayList<Package> all() {

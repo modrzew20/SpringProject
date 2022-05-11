@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -29,7 +28,7 @@ public class PackageService {
     @Autowired
     CourierRepo courierRepo;
 
-    public List<Package> allPackage() {
+    public ArrayList<Package> allPackage() {
         return packageRepo.all();
     }
 
@@ -47,7 +46,7 @@ public class PackageService {
         return packageRepo.find(packageUUID);
     }
 
-    ArrayList<Package> getPackagesAssignToCourier(UUID courierUUID){
+    public ArrayList<Package> getPackagesAssignToCourier(UUID courierUUID){
         return packageRepo.couriersPackage(courierUUID);
     }
 

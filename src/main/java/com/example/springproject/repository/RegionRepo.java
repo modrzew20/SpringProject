@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Repository
-public class RegionRepo {
+public class RegionRepo implements AbstractRepo<Region>{
     ArrayList<Region> allRegion;
 
 
