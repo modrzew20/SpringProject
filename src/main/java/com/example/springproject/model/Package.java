@@ -5,10 +5,17 @@ import lombok.*;
 import java.util.Objects;
 import java.util.UUID;
 
-@AllArgsConstructor
+
 @ToString
 @Builder
 public class Package {
+
+    public Package(UUID uuid, @NonNull double x_coordinate, @NonNull double y_coordinate, Courier courier) {
+        this.uuid = uuid;
+        this.x_coordinate = x_coordinate;
+        this.y_coordinate = y_coordinate;
+        this.courier = courier;
+    }
 
     @Generated
     @Getter
@@ -22,6 +29,22 @@ public class Package {
 
     @Getter @Setter
     private Courier courier;
+
+    @Getter @Setter
+    private double cashOnDelivery;
+
+    @Getter @Setter
+    private String account;
+
+    @Getter @Setter
+    private String accountOwner;
+
+    @Getter @Setter
+    private boolean smsNotification;
+
+    @Getter @Setter
+    private boolean fragile;
+
 
     @Override
     public boolean equals(Object o) {
