@@ -8,16 +8,16 @@ import java.util.UUID;
 
 @ToString
 @Builder
+@AllArgsConstructor
 public class Package {
 
-    public Package(UUID uuid, @NonNull double x_coordinate, @NonNull double y_coordinate, Courier courier) {
+    public Package(UUID uuid, @NonNull double x_coordinate, @NonNull double y_coordinate, UUID courier) {
         this.uuid = uuid;
         this.x_coordinate = x_coordinate;
         this.y_coordinate = y_coordinate;
         this.courier = courier;
     }
 
-    @Generated
     @Getter
     UUID uuid;
 
@@ -28,7 +28,7 @@ public class Package {
     private final double y_coordinate;
 
     @Getter @Setter
-    private Courier courier;
+    private UUID courier;
 
     @Getter @Setter
     private double cashOnDelivery;

@@ -11,6 +11,11 @@ import java.util.UUID;
 public class PackageRepo implements AbstractRepo<Package> {
     ArrayList<Package> allPackege;
 
+    public PackageRepo() {
+        allPackege = new ArrayList<>();
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),0.1,0.1,UUID.fromString("88eef4a2-3ca5-4bcf-b569-6f2ec20f483c")));
+    }
+
     public ArrayList<Package> all() {
         return allPackege;
     }
@@ -20,7 +25,7 @@ public class PackageRepo implements AbstractRepo<Package> {
     }
 
     public boolean delete(UUID uuid) throws PackageNotFound {
-        boolean removed = allPackege.removeIf(x -> x.getUuid()==uuid);
+        boolean removed = allPackege.removeIf(x -> x.getUuid().equals(uuid));
         if (!removed) throw new PackageNotFound("Package doesn't exist");
         return removed;
     }
@@ -33,7 +38,7 @@ public class PackageRepo implements AbstractRepo<Package> {
     public ArrayList<Package> couriersPackage(UUID uuid) {
         ArrayList<Package> result = new ArrayList<>();
         for (Package pack : allPackege) {
-            if (pack.getCourier().getUuid().equals(uuid)) result.add(pack);
+            if (pack.getCourier().equals(uuid)) result.add(pack);
         }
         return result;
     }

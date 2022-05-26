@@ -25,8 +25,7 @@ public class CourierService {
     }
 
     public boolean createCourier(double startPointX, double startPointY, UUID regionUUID) throws  CantCreateCourier, RegionNotFound {
-        Region region = regionRepo.find(regionUUID);
-        return courierRepo.create(new Courier(null,startPointX,startPointY,region));
+        return courierRepo.create(new Courier(UUID.randomUUID(),startPointX,startPointY,regionUUID));
     }
 
     public boolean deleteCourier(UUID courierUUID) throws CourierNotFound {
@@ -38,8 +37,7 @@ public class CourierService {
     }
 
     public Courier getAssignCourierForRegion(UUID regionUUID) throws NoCourierForThisRegion, RegionNotFound {
-        Region region = regionRepo.find(regionUUID);
-        return courierRepo.getCourierForRegion(region);
+        return courierRepo.getCourierForRegion(regionUUID);
     }
 
 

@@ -21,7 +21,7 @@ public class RegionService {
     }
 
     public boolean createRegion(String name, double N_limit,double S_limit,double W_limit,double E_limit) throws CantCreateRegion {
-        return regionRepo.create(new Region(null,name,N_limit,S_limit,W_limit,E_limit));
+        return regionRepo.create(new Region(UUID.randomUUID(),name,N_limit,S_limit,W_limit,E_limit));
     }
 
     public boolean deleteRegion(UUID regionUUID) throws RegionNotFound {

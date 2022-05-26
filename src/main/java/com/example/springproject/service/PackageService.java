@@ -34,9 +34,9 @@ public class PackageService {
 
     public boolean createPackage(double x_coords, double y_coords) throws ItemNotFound, NoCourierForThisRegion{
         Region region = (regionRepo.findRegionForPackage(x_coords,y_coords));
-        Courier courier = courierRepo.getCourierForRegion(region);
-        return packageRepo.create(Package.builder().x_coordinate(x_coords)
-                .y_coordinate(y_coords).courier(courier).build());
+        Courier courier = courierRepo.getCourierForRegion(region.getUuid());
+        return packageRepo.create(Package.builder().uuid(UUID.randomUUID()).x_coordinate(x_coords)
+                .y_coordinate(y_coords).courier(courier.getUuid()).build());
 
     }
 

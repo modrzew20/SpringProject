@@ -8,7 +8,6 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -42,7 +41,7 @@ public class RegionEndpoint {
     }
 
     @DeleteMapping("/region/{uuid}")
-    ResponseEntity<String> deleteRegion(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> deleteRegion(@PathVariable("uuid") UUID uuid) {
         boolean status;
         try {
             status = regionService.deleteRegion(uuid);
@@ -54,7 +53,8 @@ public class RegionEndpoint {
     }
 
     @GetMapping("/region/{uuid}")
-    ResponseEntity<String> findRegion(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> findRegion(@PathVariable("uuid") UUID uuid) {
+        //TODO bad request
         try {
             return ResponseEntity.status(200).body(regionService.findRegion(uuid).toString());
         } catch (RegionNotFound e) {

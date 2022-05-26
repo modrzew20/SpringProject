@@ -10,8 +10,6 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -22,12 +20,12 @@ public class CourierEndpoint {
     private CourierService courierService;
 
     @GetMapping("/courier")
-    ArrayList<Courier> allRegion() {
+    ArrayList<Courier> allCourier() {
         return courierService.allCourier();
     }
 
     @PostMapping("/courier")
-    ResponseEntity<String> createRegion(
+    ResponseEntity<String> createCourier(
             @RequestParam @NonNull double startPointX,
             @RequestParam @NonNull double startPointY,
             @RequestParam @NonNull UUID regionUUID
@@ -43,7 +41,7 @@ public class CourierEndpoint {
     }
 
     @DeleteMapping("/courier/{uuid}")
-    ResponseEntity<String> deleteRegion(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> deleteCourier(@PathVariable("uuid") UUID uuid) {
         boolean status;
         try {
             status = courierService.deleteCourier(uuid);
@@ -55,7 +53,8 @@ public class CourierEndpoint {
     }
 
     @GetMapping("/courier/{uuid}")
-    ResponseEntity<String> findRegion(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> findCourier(@PathVariable("uuid") UUID uuid) {
+        //TODO zwraca wszytskich courierow
         try {
             return ResponseEntity.status(200).body(courierService.findCourier(uuid).toString());
         } catch (CourierNotFound e) {
@@ -64,7 +63,7 @@ public class CourierEndpoint {
     }
 
     @GetMapping("/courier/region/{uuid}")
-    ResponseEntity<String> courierAssignToRegion(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> courierAssignedToRegion(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(courierService.getAssignCourierForRegion(uuid).toString());
         } catch (NoCourierForThisRegion | RegionNotFound e) {

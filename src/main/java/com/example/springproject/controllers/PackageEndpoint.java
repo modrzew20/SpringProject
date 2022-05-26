@@ -9,8 +9,6 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -29,6 +27,7 @@ public class PackageEndpoint {
     ResponseEntity<String> createPackage (
             @RequestParam @NonNull double x_coords,
             @RequestParam @NonNull double y_coords) {
+        //TODO no region for package
         boolean status;
         try {
             status = packageService.createPackage(x_coords,y_coords);
@@ -40,7 +39,7 @@ public class PackageEndpoint {
     }
 
     @DeleteMapping("/package/{uuid}")
-    ResponseEntity<String> deletePackage(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> deletePackage(@PathVariable("uuid") UUID uuid) {
         boolean status;
         try {
             status = packageService.deletePackage(uuid);
@@ -52,7 +51,7 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/{uuid}")
-    ResponseEntity<String> findPackage(@PathParam("uuid") UUID uuid) {
+    ResponseEntity<String> findPackage(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(packageService.findPackage(uuid).toString());
         } catch (PackageNotFound e) {
@@ -61,7 +60,7 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/courier/{uuid}")
-    ArrayList<Package> packageAssignToCourier(@PathParam("uuid") UUID uuid) {
+    ArrayList<Package> packageAssignedToCourier(@PathVariable("uuid") UUID uuid) {
         return packageService.getPackagesAssignToCourier(uuid);
     }
 }
