@@ -14,40 +14,32 @@ import java.util.List;
 @RestController
 public class CordsFromAddressEndpoint {
 
-    /* generate the api key here https://positionstack.com/
-    and add it as an environmental variable */
+    /* generate the api key from Google
+    and add it as an environmental variable GOOGLE_APIKEY */
 
-    @Value("${APIKEY}")
+    @Value("${GOOGLE_APIKEY}")
     private String apiKey;
 
     @GetMapping("/cords")
     public List<Double> getCordsFromAddress(@RequestParam String address) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://api.positionstack.com/v1/forward?access_key=" + apiKey
-                + "&query=" + address;
-        String fetchedCordsObject = restTemplate.getForObject(url, String.class);
-        JSONArray cordsArray = new JSONObject(fetchedCordsObject).getJSONArray("data");
 
-        List<Double> cords = new ArrayList<>();
+        String url =  "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + apiKey;
+        String fetchedInfoObject = restTemplate.getForObject(url, String.class);
+        JSONObject resultsObject = new JSONObject(fetchedInfoObject);
 
-        if (cordsArray.isEmpty()) {
+        if (resultsObject.getString("status").equals("ZERO_RESULTS")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No location with given address found");
         }
 
-        if (cordsArray.length() > 1) {
-            throw new ResponseStatusException(HttpStatus.MULTIPLE_CHOICES, "Multiple locations found");
-        }
+        JSONObject cordsObject = resultsObject
+                .getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
 
-        if (!cordsArray.getJSONObject(0).getString("name").equals(null)
-                && !cordsArray.getJSONObject(0).get("postal_code").equals(null)) {
+        List<Double> cords = new ArrayList<>();
 
-            cords.add(cordsArray.getJSONObject(0).getDouble("latitude"));
-            cords.add(cordsArray.getJSONObject(0).getDouble("longitude"));
+        cords.add(cordsObject.getDouble("lat"));
+        cords.add(cordsObject.getDouble("lng"));
 
-            return cords;
-
-        } else {
-            throw new ResponseStatusException(HttpStatus.MULTIPLE_CHOICES, "Ambiguous location");
-        }
+        return cords;
     }
 }
