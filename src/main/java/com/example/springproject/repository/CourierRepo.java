@@ -16,6 +16,10 @@ public class CourierRepo {
 
     ArrayList<Courier> allCourier;
 
+    public CourierRepo() {
+        this.allCourier = new ArrayList<>();
+    }
+
     public ArrayList<Courier> all() {
         return allCourier;
     }

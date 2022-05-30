@@ -10,8 +10,12 @@ import java.util.UUID;
 
 @Repository
 public class RegionRepo {
+
     ArrayList<Region> allRegion;
 
+    public RegionRepo() {
+        this.allRegion = new ArrayList<>();
+    }
 
     public ArrayList<Region> all() {
         return allRegion;
@@ -30,7 +34,7 @@ public class RegionRepo {
 
     public Region find(UUID uuid) throws RegionNotFound {
         return allRegion.stream().filter(r -> r.getUuid().equals(uuid)).findFirst()
-                .orElseThrow(()->new RegionNotFound("Region doesn't exist"));
+                .orElseThrow(()-> new RegionNotFound("Region doesn't exist"));
     }
 
     public boolean isRegionReserved(Region item) {
