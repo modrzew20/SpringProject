@@ -29,16 +29,16 @@ public class Region {
     @Getter @NonNull
     final double E_limit;
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Region region = (Region) o;
-//        return Double.compare(region.N_limit, N_limit) == 0 && Double.compare(region.S_limit, S_limit) == 0 && Double.compare(region.W_limit, W_limit) == 0 && Double.compare(region.E_limit, E_limit) == 0 && Objects.equals(uuid, region.uuid) && name.equals(region.name);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(uuid, name, N_limit, S_limit, W_limit, E_limit);
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Region region = (Region) o;
+        return Double.compare(region.N_limit, N_limit) == 0 && Double.compare(region.S_limit, S_limit) == 0 && Double.compare(region.W_limit, W_limit) == 0 && Double.compare(region.E_limit, E_limit) == 0 && Objects.equals(uuid, region.uuid) && name.equals(region.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, name, N_limit, S_limit, W_limit, E_limit);
+    }
 }

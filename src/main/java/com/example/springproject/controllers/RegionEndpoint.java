@@ -1,8 +1,9 @@
 package com.example.springproject.controllers;
 
 import com.example.springproject.model.Region;
-import com.example.springproject.repository.repositoryExceptions.CantCreateRegion;
-import com.example.springproject.repository.repositoryExceptions.RegionNotFound;
+import com.example.springproject.repository.repositoryExceptions.CantCreateRegionException;
+import com.example.springproject.repository.repositoryExceptions.InvalidDataException;
+import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import com.example.springproject.service.RegionService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class RegionEndpoint {
         boolean status;
         try {
             status = regionService.createRegion(name, N_limit, S_limit, W_limit, E_limit);
-        } catch (CantCreateRegion e) {
+        } catch (CantCreateRegionException | InvalidDataException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(201).build();
@@ -45,7 +46,7 @@ public class RegionEndpoint {
         boolean status;
         try {
             status = regionService.deleteRegion(uuid);
-        } catch (RegionNotFound e) {
+        } catch (RegionNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(200).build();
@@ -54,10 +55,9 @@ public class RegionEndpoint {
 
     @GetMapping("/region/{uuid}")
     ResponseEntity<String> findRegion(@PathVariable("uuid") UUID uuid) {
-        //TODO bad request
         try {
             return ResponseEntity.status(200).body(regionService.findRegion(uuid).toString());
-        } catch (RegionNotFound e) {
+        } catch (RegionNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
     }

@@ -1,10 +1,10 @@
 package com.example.springproject.controllers;
 
 import com.example.springproject.model.Courier;
-import com.example.springproject.repository.repositoryExceptions.CantCreateCourier;
-import com.example.springproject.repository.repositoryExceptions.CourierNotFound;
-import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegion;
-import com.example.springproject.repository.repositoryExceptions.RegionNotFound;
+import com.example.springproject.repository.repositoryExceptions.CantCreateCourierException;
+import com.example.springproject.repository.repositoryExceptions.CourierNotFoundException;
+import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
+import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import com.example.springproject.service.CourierService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class CourierEndpoint {
         boolean status;
         try {
             status = courierService.createCourier(startPointX, startPointY, regionUUID);
-        } catch (CantCreateCourier | RegionNotFound e) {
+        } catch (CantCreateCourierException | RegionNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(201).build();
@@ -45,7 +45,7 @@ public class CourierEndpoint {
         boolean status;
         try {
             status = courierService.deleteCourier(uuid);
-        } catch (CourierNotFound e) {
+        } catch (CourierNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(200).build();
@@ -54,10 +54,9 @@ public class CourierEndpoint {
 
     @GetMapping("/courier/{uuid}")
     ResponseEntity<String> findCourier(@PathVariable("uuid") UUID uuid) {
-        //TODO zwraca wszytskich courierow
         try {
             return ResponseEntity.status(200).body(courierService.findCourier(uuid).toString());
-        } catch (CourierNotFound e) {
+        } catch (CourierNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
     }
@@ -66,7 +65,7 @@ public class CourierEndpoint {
     ResponseEntity<String> courierAssignedToRegion(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(courierService.getAssignCourierForRegion(uuid).toString());
-        } catch (NoCourierForThisRegion | RegionNotFound e) {
+        } catch (NoCourierForThisRegionException | RegionNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
     }

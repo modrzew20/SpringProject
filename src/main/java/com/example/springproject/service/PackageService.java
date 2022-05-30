@@ -6,9 +6,9 @@ import com.example.springproject.model.Region;
 import com.example.springproject.repository.CourierRepo;
 import com.example.springproject.repository.PackageRepo;
 import com.example.springproject.repository.RegionRepo;
-import com.example.springproject.repository.repositoryExceptions.ItemNotFound;
-import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegion;
-import com.example.springproject.repository.repositoryExceptions.PackageNotFound;
+import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
+import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
+import com.example.springproject.repository.repositoryExceptions.PackageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class PackageService {
         return packageRepo.all();
     }
 
-    public boolean createPackage(double x_coords, double y_coords) throws ItemNotFound, NoCourierForThisRegion{
+    public boolean createPackage(double x_coords, double y_coords) throws ItemNotFoundException, NoCourierForThisRegionException {
         Region region = (regionRepo.findRegionForPackage(x_coords,y_coords));
         Courier courier = courierRepo.getCourierForRegion(region.getUuid());
         return packageRepo.create(Package.builder().uuid(UUID.randomUUID()).x_coordinate(x_coords)
@@ -40,11 +40,11 @@ public class PackageService {
 
     }
 
-    public boolean deletePackage(UUID packageUUID) throws PackageNotFound {
+    public boolean deletePackage(UUID packageUUID) throws PackageNotFoundException {
         return packageRepo.delete(packageUUID);
     }
 
-    public Package findPackage(UUID packageUUID) throws PackageNotFound {
+    public Package findPackage(UUID packageUUID) throws PackageNotFoundException {
         return packageRepo.find(packageUUID);
     }
 

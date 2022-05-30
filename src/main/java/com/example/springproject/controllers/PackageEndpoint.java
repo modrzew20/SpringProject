@@ -1,9 +1,9 @@
 package com.example.springproject.controllers;
 
 import com.example.springproject.model.Package;
-import com.example.springproject.repository.repositoryExceptions.ItemNotFound;
-import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegion;
-import com.example.springproject.repository.repositoryExceptions.PackageNotFound;
+import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
+import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
+import com.example.springproject.repository.repositoryExceptions.PackageNotFoundException;
 import com.example.springproject.service.PackageService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,10 @@ public class PackageEndpoint {
     ResponseEntity<String> createPackage (
             @RequestParam @NonNull double x_coords,
             @RequestParam @NonNull double y_coords) {
-        //TODO no region for package
         boolean status;
         try {
             status = packageService.createPackage(x_coords,y_coords);
-        } catch (NoCourierForThisRegion | ItemNotFound e ) {
+        } catch (NoCourierForThisRegionException | ItemNotFoundException e ) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(201).build();
@@ -43,7 +42,7 @@ public class PackageEndpoint {
         boolean status;
         try {
             status = packageService.deletePackage(uuid);
-        } catch (PackageNotFound e) {
+        } catch (PackageNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
         if (status) return ResponseEntity.status(200).build();
@@ -54,7 +53,7 @@ public class PackageEndpoint {
     ResponseEntity<String> findPackage(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(packageService.findPackage(uuid).toString());
-        } catch (PackageNotFound e) {
+        } catch (PackageNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
     }
