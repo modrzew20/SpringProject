@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
+@ToString
 public class Courier {
 
-    @Generated
     @Getter
     UUID uuid;
 
@@ -18,7 +18,7 @@ public class Courier {
     double startPointY;
 
     @Getter @Setter @NonNull
-    Region region;
+    UUID region;
 
     @Override
     public boolean equals(Object o) {

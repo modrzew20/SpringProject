@@ -2,8 +2,8 @@ package com.example.springproject;
 
 import com.example.springproject.model.Region;
 import com.example.springproject.repository.RegionRepo;
-import com.example.springproject.repository.repositoryExceptions.CantCreateRegion;
-import com.example.springproject.repository.repositoryExceptions.RegionNotFound;
+import com.example.springproject.repository.repositoryExceptions.InvalidDataException;
+import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import com.example.springproject.service.RegionService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,38 +30,32 @@ public class RegionServiceTest {
     @Autowired
     private RegionService regionService;
 
-    @BeforeAll
-    void setUpAll() throws CantCreateRegion {
-        findRegionUUID = UUID.randomUUID();
-        region = new Region(findRegionUUID, "region_0", 40.0,
-                39.0, 50.3, 60.4);
-        regionRepo.create(region);
-    }
-
     @Order(1)
     @Test
-    public void findRegionTest() throws RegionNotFound {
-        assertEquals(region.getName(), regionService.findRegion(findRegionUUID).getName());
-        assertThrows(RegionNotFound.class, () -> {
+    public void findRegionTest() throws RegionNotFoundException {
+        assertEquals("Region1", regionService.findRegion(UUID.fromString("26699969-59b4-42f1-8c70-6d403a522767")).getName());
+        assertThrows(RegionNotFoundException.class, () -> {
             regionService.findRegion(null);
         });
     }
 
-
     @Order(2)
     @Test
     public void createRegionTest() {
-        assertDoesNotThrow(() -> {
+        assertThrows(InvalidDataException.class, () -> {
             regionService.createRegion("name", 30.0, 50.1, 43.2, 32.1);
+        });
+        assertDoesNotThrow(() -> {
+            regionService.createRegion("name", 50.3, 50.1, 32.2, 42.1);
         });
     }
 
     @Order(3)
     @Test
-    public void deleteRegionTest() throws RegionNotFound {
-        assertTrue(regionService.deleteRegion(findRegionUUID));
-        assertThrows(RegionNotFound.class, () -> {
-            regionService.deleteRegion(findRegionUUID);
+    public void deleteRegionTest() throws RegionNotFoundException {
+        assertTrue(regionService.deleteRegion(UUID.fromString("4c6d7ecc-efc3-44ce-95e8-44182f86362b")));
+        assertThrows(RegionNotFoundException.class, () -> {
+            regionService.deleteRegion(UUID.fromString("4c6d7ecc-efc3-44ce-95e8-44182f86362b"));
         });
     }
 
