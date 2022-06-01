@@ -33,7 +33,7 @@ public class PackageService {
         return packageRepo.all();
     }
 
-    public boolean createPackage(double x_coords, double y_coords) throws ItemNotFound, NoCourierForThisRegion{
+    public boolean createPackage(double x_coords, double y_coords) throws ItemNotFound, NoCourierForThisRegion {
         Region region = (regionRepo.findRegionForPackage(x_coords,y_coords));
         Courier courier = courierRepo.getCourierForRegion(region);
         return packageRepo.create(new Package(null,x_coords,y_coords,courier));
@@ -47,7 +47,7 @@ public class PackageService {
         return packageRepo.find(packageUUID);
     }
 
-    ArrayList<Package> getPackagesAssignToCourier(UUID courierUUID){
+    public ArrayList<Package> getPackagesAssignToCourier(UUID courierUUID){
         return packageRepo.couriersPackage(courierUUID);
     }
 

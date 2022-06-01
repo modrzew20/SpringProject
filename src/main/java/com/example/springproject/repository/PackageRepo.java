@@ -11,6 +11,10 @@ import java.util.UUID;
 public class PackageRepo {
     ArrayList<Package> allPackege;
 
+    public PackageRepo() {
+        allPackege = new ArrayList<>();
+    }
+
     public ArrayList<Package> all() {
         return allPackege;
     }
