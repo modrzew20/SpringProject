@@ -1,7 +1,5 @@
 package com.example.springproject;
 
-import com.example.springproject.model.Region;
-import com.example.springproject.repository.RegionRepo;
 import com.example.springproject.repository.repositoryExceptions.InvalidDataException;
 import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import com.example.springproject.service.RegionService;
@@ -20,12 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RegionServiceTest {
-
-    private UUID findRegionUUID;
-    private Region region;
-
-    @Autowired
-    private RegionRepo regionRepo;
 
     @Autowired
     private RegionService regionService;
