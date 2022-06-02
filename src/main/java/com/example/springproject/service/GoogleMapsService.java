@@ -10,10 +10,10 @@ import org.json.JSONObject;
 public class GoogleMapsService {
     private final String my_key = "AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig";
 
+    //https://maps.googleapis.com/maps/api/directions/json?origin=Pabianice,Bardowskiego19a&destination=Warszawska%2075,%2095-200%20Pabianice&waypoints=optimize:true|Bugaj%20110,%2095-200%20Pabianice|Zamkowa%2031,%2095-200%20Pabianice&key=AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig
+
     private static String GET_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-    public GoogleMapsService() {
-    }
 
     public int getDistanceRequest(String origin, String destination) throws IOException {
 
