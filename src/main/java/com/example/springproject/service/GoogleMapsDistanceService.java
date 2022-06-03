@@ -7,12 +7,12 @@ import okhttp3.Response;
 import org.json.JSONObject;
 
 
-public class GoogleMapsService {
+public class GoogleMapsDistanceService {
     private final String my_key = "AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig";
 
     private static String GET_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-    public GoogleMapsService() {
+    public GoogleMapsDistanceService() {
     }
 
     public int getDistanceRequest(String origin, String destination) throws IOException {

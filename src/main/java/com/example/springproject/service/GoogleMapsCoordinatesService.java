@@ -1,27 +1,19 @@
-package com.example.springproject.controllers;
+package com.example.springproject.service;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-public class CordsFromAddressEndpoint {
+public class GoogleMapsCoordinatesService {
 
-    /* generate the api key from Google
-    and add it as an environmental variable GOOGLE_APIKEY */
+    private final String apiKey = "AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig";
 
-    @Value("${GOOGLE_APIKEY}")
-    private String apiKey;
-
-    @GetMapping("/cords")
-    public List<Double> getCordsFromAddress(@RequestParam String address) {
+    public List<Double> getCordsRequest(String address) throws IOException, ResponseStatusException {
         RestTemplate restTemplate = new RestTemplate();
 
         String url =  "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + apiKey;
