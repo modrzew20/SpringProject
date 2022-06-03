@@ -1,6 +1,7 @@
 package com.example.springproject.controllers;
 
 import com.example.springproject.model.Package;
+import com.example.springproject.repository.repositoryExceptions.CourierNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
 import com.example.springproject.repository.repositoryExceptions.PackageNotFoundException;
@@ -73,7 +74,8 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/courier/{uuid}")
-    ArrayList<Package> packageAssignedToCourier(@PathVariable("uuid") UUID uuid) {
-        return packageService.getPackagesAssignToCourier(uuid);
+    ArrayList<Package> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) throws IOException, CourierNotFoundException {
+        return googleMapsService.getOptimalRoute(packageService.getPackagesAssignToCourier(uuid));
     }
+
 }
