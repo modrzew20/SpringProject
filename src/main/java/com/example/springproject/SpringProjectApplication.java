@@ -6,11 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringProjectApplication {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(SpringProjectApplication.class, args);
-        //GoogleMapsService googleMapsService = new GoogleMapsService();
-        //System.out.print(googleMapsService.getDistanceRequest("Bardowskiego, 19a, Pabianice", "Sempołowskiej, 6, Pabianice"));
-
     }
 
 }

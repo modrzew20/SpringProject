@@ -1,4 +1,4 @@
-package com.example.springproject;
+package com.example.springproject.service;
 
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
@@ -50,6 +50,6 @@ public class PackageServiceTest {
     @Order(4)
     @Test
     public void createPackageTest() throws NoCourierForThisRegionException, ItemNotFoundException {
-        assertTrue(packageService.createPackage(2,1));
+        assertTrue(packageService.createPackage(2,1,1,"test","test",true,true));
     }
 }

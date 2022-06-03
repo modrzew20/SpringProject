@@ -1,4 +1,4 @@
-package com.example.springproject;
+package com.example.springproject.algorithm;
 
 import com.example.springproject.model.Region;
 import com.example.springproject.repository.RegionRepo;

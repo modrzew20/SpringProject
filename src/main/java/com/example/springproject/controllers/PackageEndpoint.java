@@ -4,12 +4,16 @@ import com.example.springproject.model.Package;
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
 import com.example.springproject.repository.repositoryExceptions.PackageNotFoundException;
+import com.example.springproject.service.GoogleMapsService;
 import com.example.springproject.service.PackageService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +22,9 @@ public class PackageEndpoint {
     @Autowired
     private PackageService packageService;
 
+    @Autowired
+    private GoogleMapsService googleMapsService;
+
     @GetMapping("/package")
     ArrayList<Package> allPackage() {
         return packageService.allPackage();
@@ -25,13 +32,20 @@ public class PackageEndpoint {
 
     @PostMapping("/package")
     ResponseEntity<String> createPackage (
-            @RequestParam @NonNull double x_coords,
-            @RequestParam @NonNull double y_coords) {
-        boolean status;
+            @RequestParam @NonNull String address,
+            @RequestParam double cashOnDelivery,
+            @RequestParam String account,
+            @RequestParam String accountOwner,
+            @RequestParam boolean smsNotification,
+            @RequestParam boolean fragile) {
+        boolean status = false;
         try {
-            status = packageService.createPackage(x_coords,y_coords);
+            List<Double> coords = googleMapsService.getCordsRequest(address);
+            status = packageService.createPackage(coords.get(0),coords.get(1), cashOnDelivery, account, accountOwner, smsNotification, fragile);
         } catch (NoCourierForThisRegionException | ItemNotFoundException e ) {
             return ResponseEntity.status(405).body(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         if (status) return ResponseEntity.status(201).build();
         else return ResponseEntity.status(400).build();

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -32,11 +33,34 @@ public class PackageService {
         return packageRepo.all();
     }
 
-    public boolean createPackage(double x_coords, double y_coords) throws ItemNotFoundException, NoCourierForThisRegionException {
+    public boolean createPackage(double x_coords, double y_coords,double cashOnDelivery,
+                                    String account, String accountOwner, boolean smsNotification, boolean fragile)
+                                        throws ItemNotFoundException, NoCourierForThisRegionException {
         Region region = (regionRepo.findRegionForPackage(x_coords,y_coords));
         Courier courier = courierRepo.getCourierForRegion(region.getUuid());
-        return packageRepo.create(Package.builder().uuid(UUID.randomUUID()).x_coordinate(x_coords)
-                .y_coordinate(y_coords).courier(courier.getUuid()).build());
+        Package package1 = Package.builder()
+                .uuid(UUID.randomUUID())
+                .x_coordinate(x_coords)
+                .y_coordinate(y_coords)
+                .courier(courier.getUuid())
+                .build();
+        if(cashOnDelivery != 0) {
+            package1.setCashOnDelivery(cashOnDelivery);
+        }
+        if(account != null) {
+            package1.setAccount(account);
+        }
+        if(accountOwner != null) {
+            package1.setAccountOwner(accountOwner);
+        }
+        if(smsNotification) {
+            package1.setSmsNotification(smsNotification);
+        }
+        if(fragile) {
+            package1.setFragile(fragile);
+        }
+
+        return packageRepo.create(package1);
 
     }
 

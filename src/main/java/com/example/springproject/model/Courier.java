@@ -11,6 +11,9 @@ public class Courier {
     @Getter
     UUID uuid;
 
+    @Getter @NonNull
+    String name;
+
     @Getter @Setter @NonNull
     double startPointX;
 
