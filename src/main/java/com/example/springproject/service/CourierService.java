@@ -23,8 +23,8 @@ public class CourierService {
         return courierRepo.all();
     }
 
-    public boolean createCourier(double startPointX, double startPointY, UUID regionUUID) throws CantCreateCourierException, RegionNotFoundException {
-        return courierRepo.create(new Courier(UUID.randomUUID(),startPointX,startPointY,regionUUID));
+    public boolean createCourier(String name, double startPointX, double startPointY, UUID regionUUID) throws CantCreateCourierException, RegionNotFoundException {
+        return courierRepo.create(new Courier(UUID.randomUUID(),name,startPointX,startPointY,regionUUID));
     }
 
     public boolean deleteCourier(UUID courierUUID) throws CourierNotFoundException {

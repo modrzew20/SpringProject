@@ -1,4 +1,4 @@
-package com.example.springproject;
+package com.example.springproject.service;
 
 import com.example.springproject.model.Courier;
 import com.example.springproject.model.Region;
@@ -40,11 +40,11 @@ public class CourierServiceTest {
     @Test
     public void createCourierTest() throws CantCreateCourierException {
         assertDoesNotThrow(() -> {
-            courierService.createCourier(34.2, 30.0,
+            courierService.createCourier("test",34.2, 30.0,
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
         assertThrows(CantCreateCourierException.class, () -> {
-            courierService.createCourier(34.2, 30.0,
+            courierService.createCourier("test",34.2, 30.0,
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
     }

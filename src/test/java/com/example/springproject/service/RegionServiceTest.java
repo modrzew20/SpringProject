@@ -1,4 +1,4 @@
-package com.example.springproject;
+package com.example.springproject.service;
 
 import com.example.springproject.repository.repositoryExceptions.InvalidDataException;
 import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;

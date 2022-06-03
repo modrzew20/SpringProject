@@ -26,13 +26,14 @@ public class CourierEndpoint {
 
     @PostMapping("/courier")
     ResponseEntity<String> createCourier(
+            @RequestParam("name") @NonNull String name,
             @RequestParam @NonNull double startPointX,
             @RequestParam @NonNull double startPointY,
             @RequestParam @NonNull UUID regionUUID
     ){
         boolean status;
         try {
-            status = courierService.createCourier(startPointX, startPointY, regionUUID);
+            status = courierService.createCourier(name,startPointX, startPointY, regionUUID);
         } catch (CantCreateCourierException | RegionNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }
