@@ -11,6 +11,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,8 +75,11 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/courier/{uuid}")
-    ArrayList<Package> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) throws IOException, CourierNotFoundException {
-        return googleMapsService.getOptimalRoute(packageService.getPackagesAssignToCourier(uuid));
+    ResponseEntity<String> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) {
+        try {
+            return ResponseEntity.status(200).body(googleMapsService.getOptimalRoute(uuid).toString());
+        } catch (CourierNotFoundException | IOException e) {
+            return ResponseEntity.status(405).body(e.getMessage());
+        }
     }
-
 }

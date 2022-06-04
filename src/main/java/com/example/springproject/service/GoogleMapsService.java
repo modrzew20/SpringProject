@@ -24,12 +24,15 @@ import java.util.UUID;
 @Service
 public class GoogleMapsService {
 
-    private static String GET_URL = "https://maps.googleapis.com/maps/api/directions/json?";
+    private static final String GET_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
     private final String apiKey = "AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig";
 
     @Autowired
     CourierRepo courierRepo;
+
+    @Autowired
+    PackageService packageService;
 
     public List<Double> getCordsRequest(String address) throws IOException, ResponseStatusException {
         RestTemplate restTemplate = new RestTemplate();
@@ -65,17 +68,18 @@ public class GoogleMapsService {
                 .build();
         Response response = client.newCall(request).execute();
 
+        assert response.body() != null;
         JSONObject jsonObject = new JSONObject(response.body().string());
 
         return jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").optJSONObject(0).optJSONObject("distance").getInt("value");
     }
 
-    public ArrayList<Package> getOptimalRoute(ArrayList<Package> packages) throws IOException, CourierNotFoundException {
+    public ArrayList<Package> getOptimalRoute(UUID uuid) throws IOException, CourierNotFoundException {
 
-        Courier courier = courierRepo.find(packages.get(0).getCourier());
+        ArrayList<Package> packages = packageService.getPackagesAssignToCourier(uuid);
 
-        StringBuilder url = new StringBuilder(GET_URL + "origin=" + courier.getStartPointX() + "," + courier.getStartPointY()
-                + "&destination=" + courier.getStartPointX() + "," + courier.getStartPointY()
+        StringBuilder url = new StringBuilder(GET_URL + "origin=" + courierRepo.find(uuid).getStartPointX() + "," +  courierRepo.find(uuid).getStartPointY()
+                + "&destination=" +  courierRepo.find(uuid).getStartPointX() + "," +  courierRepo.find(uuid).getStartPointY()
                 + "&waypoints=optimize:true|");
 
         for (Package i : packages) {
@@ -90,22 +94,19 @@ public class GoogleMapsService {
                 .method("GET", null)
                 .build();
         Response response = client.newCall(request).execute();
-
+        assert response.body() != null;
         JSONObject jsonObject = new JSONObject(response.body().string());
 
-        JSONArray waypoint_orderJSONArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("waypoint_order");
-
-        int[] waypoint_order = new int[waypoint_orderJSONArray.length()];
-
-        for (int i=0; i<waypoint_order.length; i++)
-        {
-            waypoint_order[i] = (int) waypoint_orderJSONArray.get(i);
+        if(jsonObject.getString("status").equals("ZERO_RESULTS")){
+            throw new CourierNotFoundException("Can't find optimal route for packages with given addresses");
         }
+
+        JSONArray waypoint_order = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("waypoint_order");
 
         ArrayList<Package> sortedPackages = new ArrayList<>();
 
-        for (int i = 0; i < waypoint_order.length; i++) {
-            sortedPackages.add(i, packages.get(waypoint_order[i]));
+        for (int i = 0; i < waypoint_order.length(); i++) {
+            sortedPackages.add(i, packages.get((int) waypoint_order.get(i)));
         }
 
         return sortedPackages;

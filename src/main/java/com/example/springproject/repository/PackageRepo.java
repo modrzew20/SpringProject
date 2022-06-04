@@ -13,9 +13,11 @@ public class PackageRepo implements AbstractRepo<Package> {
     public PackageRepo() {
         allPackage = new ArrayList<>();
         this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),0.1,0.1, UUID.fromString("88eef4a2-3ca5-4bcf-b569-6f2ec20f483c")));
-        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef6"),51.759326535199506, 19.465191720442267, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
-        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef7"),51.74555526529735, 19.461788737665167, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
-        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef8"),51.74953852876642, 19.448254702637364, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef1"),51.759326535199506, 19.465191720442267, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef2"),51.74555526529735, 19.461788737665167, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef3"),51.74953852876642, 19.448254702637364, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef4"),51.747057435234886, 19.438045090609112, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),51.772184049166256, 19.448331806950346, UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5")));
     }
 
     public ArrayList<Package> all() {
