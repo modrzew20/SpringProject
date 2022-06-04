@@ -59,7 +59,31 @@ public class RegionRepo implements AbstractRepo<Region>{
 
     public boolean isRegionReserved(Region item) {
         // TODO check if region belong to another
-        return true;
+        double N = item.getN_limit() + 180;
+        double E = item.getE_limit() + 180;
+        double S = item.getS_limit() + 180;
+        double W = item.getW_limit() + 180;
+
+        //checks if given region overlaps any other region from region list
+        for (Region region : allRegion) {
+            if (N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) ||
+                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ||
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) ||
+                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180)) {
+                return true;
+            }
+        }
+
+        //checks if given region includes in its entirety in any other region from list
+        for (Region region : allRegion) {
+            if(N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) &&
+                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) &&
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) &&
+                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Region findRegionForPackage(double x_coords, double y_coords) throws ItemNotFoundException {
