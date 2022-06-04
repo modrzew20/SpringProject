@@ -11,16 +11,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CourierServiceTest {
 
     @Autowired
@@ -36,20 +37,19 @@ public class CourierServiceTest {
         });
     }
 
-    @Order(2)
     @Test
     public void createCourierTest() throws CantCreateCourierException {
         assertDoesNotThrow(() -> {
             courierService.createCourier("test",34.2, 30.0,
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
+        assertEquals(4, courierService.allCourier().size());
         assertThrows(CantCreateCourierException.class, () -> {
             courierService.createCourier("test",34.2, 30.0,
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
     }
 
-    @Order(3)
     @Test
     public void getAssignCourierForRegionTest() throws RegionNotFoundException, NoCourierForThisRegionException {
         assertThrows(NoCourierForThisRegionException.class, () -> {
@@ -59,9 +59,9 @@ public class CourierServiceTest {
                 courierService.getAssignCourierForRegion(UUID.fromString("26699969-59b4-42f1-8c70-6d403a522767")).getUuid());
     }
 
-    @Order(4)
     @Test
     public void deleteCourierTest() throws CourierNotFoundException {
         assertTrue(courierService.deleteCourier(UUID.fromString("1b12b987-b96a-4c17-9428-9376ff8e26e5")));
+        assertEquals(2, courierService.allCourier().size());
     }
 }

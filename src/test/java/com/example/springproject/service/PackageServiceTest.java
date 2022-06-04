@@ -9,22 +9,22 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PackageServiceTest {
 
     @Autowired
     private PackageService packageService;
 
-    @Order(1)
     @Test
     public void findPackageTest() throws PackageNotFoundException {
         assertEquals(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),
@@ -34,22 +34,21 @@ public class PackageServiceTest {
         });
     }
 
-    @Order(2)
     @Test
     public void getPackagesAssignToCourierTest() {
         assertEquals(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),
                 packageService.getPackagesAssignToCourier(UUID.fromString("88eef4a2-3ca5-4bcf-b569-6f2ec20f483c")).get(0).getUuid());
     }
 
-    @Order(3)
     @Test
     public void deletePackageTest() throws PackageNotFoundException {
         assertTrue(packageService.deletePackage(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5")));
+        assertEquals(0, packageService.allPackage().size());
     }
 
-    @Order(4)
     @Test
     public void createPackageTest() throws NoCourierForThisRegionException, ItemNotFoundException {
         assertTrue(packageService.createPackage(2,1,1,"test","test",true,true));
+        assertEquals(2, packageService.allPackage().size());
     }
 }
