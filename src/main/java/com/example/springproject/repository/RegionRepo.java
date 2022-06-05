@@ -42,7 +42,7 @@ public class RegionRepo implements AbstractRepo<Region>{
             throw new InvalidDataException("Invalid input data");
         }
 
-        if(isRegionReserved(item)) return allRegion.add(item);
+        if(!isRegionReserved(item)) return allRegion.add(item);
         throw new CantCreateRegionException("Region with the given data already exist");
     }
 
