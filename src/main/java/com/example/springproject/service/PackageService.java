@@ -44,6 +44,7 @@ public class PackageService {
                 .y_coordinate(y_coords)
                 .address(address)
                 .courier(courier.getUuid())
+                .courierName(courier.getName())
                 .build();
         if(cashOnDelivery != 0) {
             package1.setCashOnDelivery(cashOnDelivery);

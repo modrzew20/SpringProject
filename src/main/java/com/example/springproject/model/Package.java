@@ -29,6 +29,9 @@ public class Package {
     private UUID courier;
 
     @Getter @Setter
+    private String courierName;
+
+    @Getter @Setter
     private double cashOnDelivery;
 
     @Getter @Setter
@@ -43,12 +46,13 @@ public class Package {
     @Getter @Setter
     private boolean fragile;
 
-    public Package(UUID uuid, double x_coordinate, double y_coordinate, String test, UUID courier) {
+    public Package(UUID uuid, double x_coordinate, double y_coordinate, String address, UUID courier, String courierName) {
         this.uuid = uuid;
         this.x_coordinate = x_coordinate;
         this.y_coordinate = y_coordinate;
-        this.address = test;
+        this.address = address;
         this.courier = courier;
+        this.courierName = courierName;
     }
 
 

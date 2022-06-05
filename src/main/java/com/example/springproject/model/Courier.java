@@ -23,6 +23,10 @@ public class Courier {
     @Getter @Setter @NonNull
     UUID region;
 
+    @Getter @Setter @NonNull
+    String regionName;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
