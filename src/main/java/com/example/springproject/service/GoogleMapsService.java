@@ -26,7 +26,7 @@ public class GoogleMapsService {
 
     private static final String GET_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-    private final String apiKey = "AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig";
+    private final String apiKey = "AIzaSyA9a5-2X_6nywr0z83RszO4kn4oSES4tys";
 
     @Autowired
     CourierRepo courierRepo;
