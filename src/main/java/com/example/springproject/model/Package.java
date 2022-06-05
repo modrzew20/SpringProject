@@ -11,12 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Package {
 
-    public Package(UUID uuid, @NonNull double x_coordinate, @NonNull double y_coordinate, UUID courier) {
-        this.uuid = uuid;
-        this.x_coordinate = x_coordinate;
-        this.y_coordinate = y_coordinate;
-        this.courier = courier;
-    }
+
 
     @Getter
     UUID uuid;
@@ -26,6 +21,9 @@ public class Package {
 
     @Getter @NonNull
     private final double y_coordinate;
+
+    @Getter @NonNull
+    private final String address;
 
     @Getter @Setter
     private UUID courier;
@@ -44,6 +42,14 @@ public class Package {
 
     @Getter @Setter
     private boolean fragile;
+
+    public Package(UUID uuid, double x_coordinate, double y_coordinate, String test, UUID courier) {
+        this.uuid = uuid;
+        this.x_coordinate = x_coordinate;
+        this.y_coordinate = y_coordinate;
+        this.address = test;
+        this.courier = courier;
+    }
 
 
     @Override

@@ -50,6 +50,6 @@ public class PackageServiceTest {
     @Order(4)
     @Test
     public void createPackageTest() throws NoCourierForThisRegionException, ItemNotFoundException {
-        assertTrue(packageService.createPackage(2,1,1,"test","test",true,true));
+        assertTrue(packageService.createPackage(2,1,"testaddress",1,"test","test",true,true));
     }
 }

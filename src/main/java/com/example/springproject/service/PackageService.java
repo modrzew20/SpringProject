@@ -33,7 +33,7 @@ public class PackageService {
         return packageRepo.all();
     }
 
-    public boolean createPackage(double x_coords, double y_coords,double cashOnDelivery,
+    public boolean createPackage(double x_coords, double y_coords, String address, double cashOnDelivery,
                                     String account, String accountOwner, boolean smsNotification, boolean fragile)
                                         throws ItemNotFoundException, NoCourierForThisRegionException {
         Region region = (regionRepo.findRegionForPackage(x_coords,y_coords));
@@ -42,6 +42,7 @@ public class PackageService {
                 .uuid(UUID.randomUUID())
                 .x_coordinate(x_coords)
                 .y_coordinate(y_coords)
+                .address(address)
                 .courier(courier.getUuid())
                 .build();
         if(cashOnDelivery != 0) {
