@@ -56,6 +56,23 @@ public class GoogleMapsService {
         return cords;
     }
 
+
+    public String getFullAddress(String address) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url =  "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + apiKey;
+        String fetchedInfoObject = restTemplate.getForObject(url, String.class);
+        JSONObject resultsObject = new JSONObject(fetchedInfoObject);
+
+        if (resultsObject.getString("status").equals("ZERO_RESULTS")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No location with given address found");
+        }
+
+        JSONObject cordsObject = resultsObject
+                .getJSONArray("results").getJSONObject(0);
+        return cordsObject.getString("formatted_address");
+    }
+
     public int getDistanceRequest(String origin, String destination) throws IOException {
 
         String url = GET_URL + "origin=" + origin + "&destination=" + destination + "&key=" + apiKey;

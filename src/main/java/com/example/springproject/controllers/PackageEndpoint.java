@@ -43,7 +43,8 @@ public class PackageEndpoint {
         boolean status = false;
         try {
             List<Double> coords = googleMapsService.getCordsRequest(address);
-            status = packageService.createPackage(coords.get(1),coords.get(0),address, cashOnDelivery, account, accountOwner, smsNotification, fragile);
+            String fullAddress = googleMapsService.getFullAddress(address);
+            status = packageService.createPackage(coords.get(1),coords.get(0),fullAddress, cashOnDelivery, account, accountOwner, smsNotification, fragile);
         } catch (NoCourierForThisRegionException | ItemNotFoundException e ) {
             return ResponseEntity.status(405).body(e.getMessage());
         } catch (IOException e) {
