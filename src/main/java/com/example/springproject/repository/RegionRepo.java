@@ -6,6 +6,8 @@ import com.example.springproject.repository.repositoryExceptions.InvalidDataExce
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import org.springframework.stereotype.Repository;
+import util.AlgorithmEnum;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -42,8 +44,20 @@ public class RegionRepo implements AbstractRepo<Region>{
             throw new InvalidDataException("Invalid input data");
         }
 
-        if(!isRegionReserved(item)) return allRegion.add(item);
-        throw new CantCreateRegionException("Region with the given data already exist");
+        if(isRegionReserved(item).equals(AlgorithmEnum.REGION_HAS_SAME_CORDS_AS_ANOTHER)) {
+            throw new CantCreateRegionException("Region with the given data already exist");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.REGION_INCLUDED_IN_ANOTHER)) {
+            throw new CantCreateRegionException("Region includes in another region");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.REGION_OVERLAPS)) {
+            throw new CantCreateRegionException("Region overlaps another region");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.CORRECT))
+            return allRegion.add(item);
+        else {
+            throw new CantCreateRegionException("An unexpected error has occurred");
+        }
     }
 
     public boolean delete(UUID uuid) throws RegionNotFoundException {
@@ -57,12 +71,32 @@ public class RegionRepo implements AbstractRepo<Region>{
                 .orElseThrow(()->new RegionNotFoundException("Region doesn't exist"));
     }
 
-    public boolean isRegionReserved(Region item) {
+    public AlgorithmEnum isRegionReserved(Region item) {
         // TODO check if region belong to another
         double N = item.getN_limit() + 180;
         double E = item.getE_limit() + 180;
         double S = item.getS_limit() + 180;
         double W = item.getW_limit() + 180;
+
+        //checks if given region has exactly the same coordinates as any region from the list
+        for(Region region : allRegion) {
+            if (N == (region.getN_limit() + 180) &&
+                    S == (region.getS_limit() + 180) &&
+                    W == (region.getW_limit() + 180) &&
+                    E == (region.getE_limit() + 180)) {
+                return AlgorithmEnum.REGION_HAS_SAME_CORDS_AS_ANOTHER;
+            }
+        }
+
+        //checks if given region includes in its entirety in any other region from region list
+        for (Region region : allRegion) {
+            if(N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) &&
+                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) &&
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) &&
+                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ) {
+                return AlgorithmEnum.REGION_INCLUDED_IN_ANOTHER;
+            }
+        }
 
         //checks if given region overlaps any other region from region list
         for (Region region : allRegion) {
@@ -70,20 +104,11 @@ public class RegionRepo implements AbstractRepo<Region>{
                     S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ||
                     W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) ||
                     E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180)) {
-                return true;
+                return AlgorithmEnum.REGION_OVERLAPS;
             }
         }
 
-        //checks if given region includes in its entirety in any other region from list
-        for (Region region : allRegion) {
-            if(N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) &&
-                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) &&
-                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) &&
-                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ) {
-                return true;
-            }
-        }
-        return false;
+        return AlgorithmEnum.CORRECT;
     }
 
     public Region findRegionForPackage(double x_coords, double y_coords) throws ItemNotFoundException {
