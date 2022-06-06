@@ -47,4 +47,5 @@ public class CourierRepo implements AbstractRepo<Courier>{
         return allCourier.stream().filter(c -> c.getRegion().equals(region)).findFirst()
                 .orElseThrow(() -> new NoCourierForThisRegionException("No courier for this region"));
     }
+
 }
