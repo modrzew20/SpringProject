@@ -100,10 +100,14 @@ public class RegionRepo implements AbstractRepo<Region>{
 
         //checks if given region overlaps any other region from region list
         for (Region region : allRegion) {
-            if (N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) ||
-                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ||
-                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) ||
-                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180)) {
+            if (N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) && W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) ||
+                    N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) && E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ||
+//                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) ||
+                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ||
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) ||
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ||
+//                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) && N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) ||
+                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) && S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ) {
                 return AlgorithmEnum.REGION_OVERLAPS;
             }
         }
