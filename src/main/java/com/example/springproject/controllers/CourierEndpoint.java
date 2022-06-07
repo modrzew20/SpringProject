@@ -20,11 +20,13 @@ public class CourierEndpoint {
     private CourierService courierService;
 
     @GetMapping("/courier")
+    @CrossOrigin(origins = "*")
     ArrayList<Courier> allCourier() {
         return courierService.allCourier();
     }
 
     @PostMapping("/courier")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> createCourier(
             @RequestParam("name") @NonNull String name,
             @RequestParam @NonNull double startPointX,
@@ -42,6 +44,7 @@ public class CourierEndpoint {
     }
 
     @DeleteMapping("/courier/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> deleteCourier(@PathVariable("uuid") UUID uuid) {
         boolean status;
         try {
@@ -54,6 +57,7 @@ public class CourierEndpoint {
     }
 
     @GetMapping("/courier/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> findCourier(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(courierService.findCourier(uuid).toString());
@@ -63,6 +67,7 @@ public class CourierEndpoint {
     }
 
     @GetMapping("/courier/region/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> courierAssignedToRegion(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(courierService.getAssignCourierForRegion(uuid).toString());

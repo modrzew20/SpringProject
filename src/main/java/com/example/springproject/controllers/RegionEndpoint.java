@@ -19,11 +19,13 @@ public class RegionEndpoint {
     private RegionService regionService;
 
     @GetMapping("/region")
+    @CrossOrigin(origins = "*")
     public ArrayList<Region> allRegion() {
         return regionService.allRegion();
     }
 
     @PostMapping("/region")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<String> createRegion(
             @RequestParam @NonNull String name,
             @RequestParam @NonNull double N_limit,
@@ -42,6 +44,7 @@ public class RegionEndpoint {
     }
 
     @DeleteMapping("/region/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> deleteRegion(@PathVariable("uuid") UUID uuid) {
         boolean status;
         try {
@@ -54,6 +57,7 @@ public class RegionEndpoint {
     }
 
     @GetMapping("/region/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> findRegion(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(regionService.findRegion(uuid).toString());
@@ -63,6 +67,7 @@ public class RegionEndpoint {
     }
 
     @GetMapping("/freeregion")
+    @CrossOrigin(origins = "*")
     ResponseEntity<ArrayList<Region>> getRegionsWithNoCourier() {
         return ResponseEntity.status(200).body(regionService.getRegionsWithNoCourier());
     }
