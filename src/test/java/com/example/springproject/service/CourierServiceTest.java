@@ -27,7 +27,6 @@ public class CourierServiceTest {
     @Autowired
     private CourierService courierService;
 
-    @Order(1)
     @Test
     public void findCourierTest() throws CourierNotFoundException {
         assertEquals(UUID.fromString("88eef4a2-3ca5-4bcf-b569-6f2ec20f483c"), courierService.findCourier
@@ -38,16 +37,24 @@ public class CourierServiceTest {
     }
 
     @Test
-    public void createCourierTest() throws CantCreateCourierException {
+    public void createCourierTest() {
+        int size = courierService.allCourier().size();
         assertDoesNotThrow(() -> {
             courierService.createCourier("test",34.2, 30.0,
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
-        assertEquals(5, courierService.allCourier().size());
+        assertEquals(size + 1, courierService.allCourier().size());
+
         assertThrows(CantCreateCourierException.class, () -> {
             courierService.createCourier("test",34.2, 30.0,
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
+
+        assertThrows(RegionNotFoundException.class, () -> {
+            courierService.createCourier("test",34.2, 30.0,
+                    UUID.fromString("c0f09f98-9b22-4580-9c3d-a4273bf6327a"));
+        });
+
     }
 
     @Test
@@ -61,7 +68,8 @@ public class CourierServiceTest {
 
     @Test
     public void deleteCourierTest() throws CourierNotFoundException {
+        int size = courierService.allCourier().size();
         assertTrue(courierService.deleteCourier(UUID.fromString("1b12b987-b96a-4c17-9428-9376ff8e26e5")));
-        assertEquals(3, courierService.allCourier().size());
+        assertEquals(size - 1, courierService.allCourier().size());
     }
 }

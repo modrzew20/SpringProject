@@ -35,11 +35,6 @@ public class AlgorithmTest {
     }
 
     @Test
-    void sizeTest() {
-        assertEquals(9, regionRepo.all().size());
-    }
-
-    @Test
     void assignPackageToRegionTest() throws ItemNotFoundException {
         assertEquals(regionRepo.findRegionForPackage(1.5,1.5).getName(),"Region1");
         assertEquals(regionRepo.findRegionForPackage(-2.5,1.5).getName(),"Region2");

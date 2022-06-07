@@ -42,15 +42,16 @@ public class PackageServiceTest {
 
     @Test
     public void deletePackageTest() throws PackageNotFoundException {
-        assertEquals(6, packageService.allPackage().size());
+        int size = packageService.allPackage().size();
         assertTrue(packageService.deletePackage(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5")));
-        assertEquals(5, packageService.allPackage().size());
+        assertEquals(size - 1, packageService.allPackage().size());
 
     }
 
     @Test
     public void createPackageTest() throws NoCourierForThisRegionException, ItemNotFoundException {
+        int size = packageService.allPackage().size();
         assertTrue(packageService.createPackage(2,1,"test street",100.0,"test","johnny",true, true));
-        assertEquals(7, packageService.allPackage().size());
+        assertEquals(size + 1, packageService.allPackage().size());
     }
 }

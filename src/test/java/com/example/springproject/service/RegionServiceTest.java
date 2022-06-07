@@ -33,24 +33,25 @@ public class RegionServiceTest {
 
     @Test
     public void createRegionTest() {
+        int size = regionService.allRegion().size();
         assertThrows(InvalidDataException.class, () -> {
             regionService.createRegion("name", 30.0, 50.1, 43.2, 32.1);
         });
         assertDoesNotThrow(() -> {
             regionService.createRegion("name", 50.3, 50.1, 32.2, 42.1);
         });
-        assertEquals(11, regionService.allRegion().size());
+        assertEquals(size + 1, regionService.allRegion().size());
 
     }
 
-    @Order(3)
     @Test
     public void deleteRegionTest() throws RegionNotFoundException {
+        int size = regionService.allRegion().size();
         assertTrue(regionService.deleteRegion(UUID.fromString("4c6d7ecc-efc3-44ce-95e8-44182f86362b")));
         assertThrows(RegionNotFoundException.class, () -> {
             regionService.deleteRegion(UUID.fromString("4c6d7ecc-efc3-44ce-95e8-44182f86362b"));
         });
-        assertEquals(9, regionService.allRegion().size());
+        assertEquals(size - 1, regionService.allRegion().size());
     }
 
 }
