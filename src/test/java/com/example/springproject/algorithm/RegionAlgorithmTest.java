@@ -10,6 +10,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RegionAlgorithmTest {
@@ -27,7 +29,6 @@ public class RegionAlgorithmTest {
     void init() throws CantCreateRegionException, InvalidDataException {
         regionService.createRegion("first", 20.0, 10.0, 10.0, 20.0);
     }
-
     @Test
     public void createRegionIncludingFirstRegionTest() {
         // zawiera w sobie cały pierwszy region
@@ -80,7 +81,7 @@ public class RegionAlgorithmTest {
     }
     @Test
     public void createRegionIncludingThreeWallsOfFirstRegionTest() {
-        //
+        // region zawiera 3 sciany regionu pierwszego
         assertThrows(CantCreateRegionException.class, () -> {
             regionService.createRegion("second", 20.0, 15.0, 10.0, 20.0);
         });
