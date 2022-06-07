@@ -76,11 +76,12 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/courier/{uuid}")
-    ResponseEntity<String> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) {
+    ResponseEntity<ArrayList<Package>> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) throws IOException, CourierNotFoundException {
         try {
-            return ResponseEntity.status(200).body(googleMapsService.getOptimalRoute(uuid).toString());
+            System.out.println(uuid);
+            return ResponseEntity.status(200).body(googleMapsService.getOptimalRoute(uuid));
         } catch (CourierNotFoundException | IOException e) {
-            return ResponseEntity.status(405).body(e.getMessage());
+            return ResponseEntity.status(405).build();
         }
     }
 }

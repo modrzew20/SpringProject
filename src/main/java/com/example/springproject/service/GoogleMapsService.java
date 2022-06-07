@@ -27,6 +27,7 @@ public class GoogleMapsService {
     private static final String GET_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
     private final String apiKey = "AIzaSyA9a5-2X_6nywr0z83RszO4kn4oSES4tys";
+    private final String apiKey2 = "AIzaSyCYWcIJBZq1eS8sNcAACBkO0GJOXK8-5ig";
 
     @Autowired
     CourierRepo courierRepo;
@@ -102,29 +103,34 @@ public class GoogleMapsService {
         for (Package i : packages) {
             url.append(i.getX_coordinate()).append(",").append(i.getY_coordinate()).append("|");
         }
-        url.append("&key=" + apiKey);
+        url.append("&key=" + apiKey2);
 
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
+
         Request request = new Request.Builder()
                 .url(String.valueOf(url))
                 .method("GET", null)
                 .build();
+
         Response response = client.newCall(request).execute();
         assert response.body() != null;
         JSONObject jsonObject = new JSONObject(response.body().string());
+        System.out.println("1");
 
         if(jsonObject.getString("status").equals("ZERO_RESULTS")){
             throw new CourierNotFoundException("Can't find optimal route for packages with given addresses");
         }
 
         JSONArray waypoint_order = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("waypoint_order");
+        System.out.println("2");
 
         ArrayList<Package> sortedPackages = new ArrayList<>();
 
         for (int i = 0; i < waypoint_order.length(); i++) {
             sortedPackages.add(i, packages.get((int) waypoint_order.get(i)));
         }
+
 
         return sortedPackages;
     }
