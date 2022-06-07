@@ -17,7 +17,7 @@ public class PackageRepo implements AbstractRepo<Package> {
         this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef2"),51.74555526529735, 19.461788737665167,"address test", UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5"),"Kurier Lodz"));
         this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef3"),51.74953852876642, 19.448254702637364,"address test", UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5"),"Kurier Lodz"));
         this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef4"),51.747057435234886, 19.438045090609112,"address test", UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5"),"Kurier Lodz"));
-        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),51.772184049166256, 19.448331806950346,"address test", UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5"),"Kurier Lodz"));
+        this.create(new Package(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef6"),51.772184049166256, 19.448331806950346,"address test", UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5"),"Kurier Lodz"));
     }
 
     public ArrayList<Package> all() {
