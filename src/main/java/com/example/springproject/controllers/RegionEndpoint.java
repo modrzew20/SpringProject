@@ -62,5 +62,11 @@ public class RegionEndpoint {
         }
     }
 
+    @GetMapping("/freeregion")
+    ResponseEntity<ArrayList<Region>> getRegionsWithNoCourier() {
+        return ResponseEntity.status(200).body(regionService.getRegionsWithNoCourier());
+    }
+
+
 
 }

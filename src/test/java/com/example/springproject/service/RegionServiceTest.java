@@ -39,7 +39,7 @@ public class RegionServiceTest {
         assertDoesNotThrow(() -> {
             regionService.createRegion("name", 50.3, 50.1, 32.2, 42.1);
         });
-        assertEquals(10, regionService.allRegion().size());
+        assertEquals(11, regionService.allRegion().size());
 
     }
 
@@ -50,7 +50,7 @@ public class RegionServiceTest {
         assertThrows(RegionNotFoundException.class, () -> {
             regionService.deleteRegion(UUID.fromString("4c6d7ecc-efc3-44ce-95e8-44182f86362b"));
         });
-        assertEquals(8, regionService.allRegion().size());
+        assertEquals(9, regionService.allRegion().size());
     }
 
 }

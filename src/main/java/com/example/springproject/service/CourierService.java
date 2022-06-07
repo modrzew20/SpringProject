@@ -1,6 +1,7 @@
 package com.example.springproject.service;
 
 import com.example.springproject.model.Courier;
+import com.example.springproject.model.Region;
 import com.example.springproject.repository.CourierRepo;
 import com.example.springproject.repository.RegionRepo;
 import com.example.springproject.repository.repositoryExceptions.*;
@@ -24,7 +25,13 @@ public class CourierService {
     }
 
     public boolean createCourier(String name, double startPointX, double startPointY, UUID regionUUID) throws CantCreateCourierException, RegionNotFoundException {
-        return courierRepo.create(new Courier(UUID.randomUUID(),name,startPointX,startPointY,regionUUID));
+        try {
+            Region region = regionRepo.find(regionUUID);
+            return courierRepo.create(new Courier(UUID.randomUUID(),name,startPointX,startPointY,region.getUuid(),region.getName()));
+        } catch (RegionNotFoundException e) {
+            throw new RegionNotFoundException("Region not found");
+        }
+
     }
 
     public boolean deleteCourier(UUID courierUUID) throws CourierNotFoundException {

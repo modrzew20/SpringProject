@@ -1,6 +1,7 @@
 package com.example.springproject.controllers;
 
 import com.example.springproject.model.Package;
+import com.example.springproject.repository.repositoryExceptions.CourierNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
 import com.example.springproject.repository.repositoryExceptions.PackageNotFoundException;
@@ -10,6 +11,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +43,8 @@ public class PackageEndpoint {
         boolean status = false;
         try {
             List<Double> coords = googleMapsService.getCordsRequest(address);
-            status = packageService.createPackage(coords.get(0),coords.get(1), cashOnDelivery, account, accountOwner, smsNotification, fragile);
+            String fullAddress = googleMapsService.getFullAddress(address);
+            status = packageService.createPackage(coords.get(1),coords.get(0),fullAddress, cashOnDelivery, account, accountOwner, smsNotification, fragile);
         } catch (NoCourierForThisRegionException | ItemNotFoundException e ) {
             return ResponseEntity.status(405).body(e.getMessage());
         } catch (IOException e) {
@@ -73,7 +76,11 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/courier/{uuid}")
-    ArrayList<Package> packageAssignedToCourier(@PathVariable("uuid") UUID uuid) {
-        return packageService.getPackagesAssignToCourier(uuid);
+    ResponseEntity<String> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) {
+        try {
+            return ResponseEntity.status(200).body(googleMapsService.getOptimalRoute(uuid).toString());
+        } catch (CourierNotFoundException | IOException e) {
+            return ResponseEntity.status(405).body(e.getMessage());
+        }
     }
 }

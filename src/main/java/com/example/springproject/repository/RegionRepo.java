@@ -6,6 +6,8 @@ import com.example.springproject.repository.repositoryExceptions.InvalidDataExce
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import org.springframework.stereotype.Repository;
+import util.AlgorithmEnum;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -25,6 +27,7 @@ public class RegionRepo implements AbstractRepo<Region>{
         this.create(new Region(UUID.fromString("df1941d5-20b3-48ae-9186-cd37b47aac37"),"Region7",0.5,-0.5,1,2));
         this.create(new Region(UUID.fromString("c42f4dc3-5178-43f0-b9b9-1e42b094bd23"),"Region8",2,1,-0.5,0.5));
         this.create(new Region(UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"),"Region9",-1,-2,-0.5,0.5));
+        this.create(new Region(UUID.fromString("26699969-efc3-4099-9742-3c863be4a984"), "Lodz", 51.821809, 51.722660, 19.409147, 19.497900));
     }
 
 
@@ -41,8 +44,23 @@ public class RegionRepo implements AbstractRepo<Region>{
             throw new InvalidDataException("Invalid input data");
         }
 
-        if(isRegionReserved(item)) return allRegion.add(item);
-        throw new CantCreateRegionException("Region with the given data already exist");
+        if(isRegionReserved(item).equals(AlgorithmEnum.REGION_HAS_SAME_CORDS_AS_ANOTHER)) {
+            throw new CantCreateRegionException("Region with the given data already exist");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.REGION_INCLUDED_IN_ANOTHER)) {
+            throw new CantCreateRegionException("Region includes in another region");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.REGION_INCLUDES_ANOTHER)) {
+            throw new CantCreateRegionException("Region includes whole another region");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.REGION_OVERLAPS)) {
+            throw new CantCreateRegionException("Region overlaps another region");
+        }
+        else if (isRegionReserved(item).equals(AlgorithmEnum.CORRECT))
+            return allRegion.add(item);
+        else {
+            throw new CantCreateRegionException("An unexpected error has occurred");
+        }
     }
 
     public boolean delete(UUID uuid) throws RegionNotFoundException {
@@ -56,9 +74,99 @@ public class RegionRepo implements AbstractRepo<Region>{
                 .orElseThrow(()->new RegionNotFoundException("Region doesn't exist"));
     }
 
-    public boolean isRegionReserved(Region item) {
-        // TODO check if region belong to another
-        return true;
+    public AlgorithmEnum isRegionReserved(Region item) {
+        double N = item.getN_limit() + 180;
+        double E = item.getE_limit() + 180;
+        double S = item.getS_limit() + 180;
+        double W = item.getW_limit() + 180;
+
+        //checks if given region has exactly the same coordinates as any region from the list
+        for(Region region : allRegion) {
+            if (N == (region.getN_limit() + 180) &&
+                    S == (region.getS_limit() + 180) &&
+                    W == (region.getW_limit() + 180) &&
+                    E == (region.getE_limit() + 180)) {
+                return AlgorithmEnum.REGION_HAS_SAME_CORDS_AS_ANOTHER;
+            }
+        }
+
+        //checks if given region includes in its entirety in any other region from region list
+        for (Region region : allRegion) {
+            if(N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) &&
+                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) &&
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) &&
+                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ) {
+                return AlgorithmEnum.REGION_INCLUDED_IN_ANOTHER;
+            }
+        }
+
+        //checks if given region contains any other region from region list
+        for (Region region : allRegion) {
+            if(N > (region.getS_limit() + 180) && N > (region.getN_limit() + 180) &&
+                    S < (region.getS_limit() + 180) && S < (region.getN_limit() + 180) &&
+                    W < (region.getW_limit() + 180) && W < (region.getE_limit() + 180) &&
+                    E > (region.getW_limit() + 180) && E > (region.getE_limit() + 180) ) {
+                return AlgorithmEnum.REGION_INCLUDES_ANOTHER;
+            }
+        }
+
+        //checks if given region overlaps any other region from region list
+        for (Region region : allRegion) {
+            if (N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) && W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) ||
+                    N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) && E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ||
+                    S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) ||
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && N > (region.getS_limit() + 180) && N < (region.getN_limit() + 180) ||
+                    W > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ||
+                    E > (region.getW_limit() + 180) && E < (region.getE_limit() + 180) && S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) ||
+
+                    N == (region.getN_limit() + 180) && S == (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S == (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && E == (region.getE_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W == (region.getW_limit() + 180) ||
+
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S == (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S == (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W == (region.getW_limit() + 180) ||
+
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+
+                    N == (region.getN_limit() + 180) && S == (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N == (region.getN_limit() + 180) && S == (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W == (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W == (region.getW_limit() + 180) ||
+
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getN_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getE_limit() + 180) ||
+
+                    N == (region.getN_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S == (region.getN_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E == (region.getE_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W == (region.getE_limit() + 180) ||
+
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180) ||
+
+                    N > (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S < (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E > (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W > (region.getW_limit() + 180) ||
+                    N < (region.getN_limit() + 180) && N > (region.getS_limit() + 180) && S < (region.getN_limit() + 180) && S > (region.getS_limit() + 180) && E < (region.getE_limit() + 180) && E > (region.getW_limit() + 180) && W < (region.getE_limit() + 180) && W < (region.getW_limit() + 180)) {
+                return AlgorithmEnum.REGION_OVERLAPS;
+            }
+        }
+        return AlgorithmEnum.CORRECT;
     }
 
     public Region findRegionForPackage(double x_coords, double y_coords) throws ItemNotFoundException {
