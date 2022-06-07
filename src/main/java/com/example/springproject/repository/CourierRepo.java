@@ -20,6 +20,7 @@ public class CourierRepo implements AbstractRepo<Courier>{
         this.create(new Courier(UUID.fromString("1b12b987-b96a-4c17-9428-9376ff8e26e5"),"Kurier 2","Tkacka 34/36, 90-156 Łódź",UUID.fromString("4c6d7ecc-efc3-44ce-95e8-44182f86362b"),"Region2"));
         this.create(new Courier(UUID.fromString("b442336c-5ff2-4ef3-baa9-50b66820de43"),"Kurier 3","Aleksandra Zelwerowicza 38/44, 90-147 Łódź",UUID.fromString("f13f7383-1b75-439a-b44f-589f94f4a5e0"),"Region3"));
         this.create(new Courier(UUID.fromString("88eef4a2-5ff2-4bcf-baa9-9376ff8e26e5"),"Kurier Lodz","Dr. Stefana Kopcińskiego 41, 90-143 Łódź", UUID.fromString("26699969-efc3-4099-9742-3c863be4a984"),"Lodz"));
+        this.create(new Courier(UUID.fromString("4d43de8c-e6bb-11ec-8fea-0242ac120002"),"Kurier Zduńska Wola","Łąkowa 27, 98-331 Zduńska Wola", UUID.fromString("965dad1b-7f91-458b-89d9-d69208c51c2b"),"Zduńska Wola"));
     }
 
     public ArrayList<Courier> all() {
