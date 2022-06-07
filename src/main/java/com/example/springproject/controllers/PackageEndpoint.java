@@ -83,7 +83,6 @@ public class PackageEndpoint {
     @CrossOrigin(origins = "*")
     ResponseEntity<ArrayList<Package>> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) throws IOException, CourierNotFoundException {
         try {
-            System.out.println(uuid);
             return ResponseEntity.status(200).body(googleMapsService.getOptimalRoute(uuid));
         } catch (CourierNotFoundException | IOException e) {
             return ResponseEntity.status(405).build();
