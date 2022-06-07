@@ -28,11 +28,13 @@ public class PackageEndpoint {
     private GoogleMapsService googleMapsService;
 
     @GetMapping("/package")
+    @CrossOrigin(origins = "*")
     ArrayList<Package> allPackage() {
         return packageService.allPackage();
     }
 
     @PostMapping("/package")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> createPackage (
             @RequestParam @NonNull String address,
             @RequestParam double cashOnDelivery,
@@ -55,6 +57,7 @@ public class PackageEndpoint {
     }
 
     @DeleteMapping("/package/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> deletePackage(@PathVariable("uuid") UUID uuid) {
         boolean status;
         try {
@@ -67,6 +70,7 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<String> findPackage(@PathVariable("uuid") UUID uuid) {
         try {
             return ResponseEntity.status(200).body(packageService.findPackage(uuid).toString());
@@ -76,9 +80,9 @@ public class PackageEndpoint {
     }
 
     @GetMapping("/package/courier/{uuid}")
+    @CrossOrigin(origins = "*")
     ResponseEntity<ArrayList<Package>> packagesAssignedInOrderToCourier(@PathVariable("uuid") UUID uuid) throws IOException, CourierNotFoundException {
         try {
-            System.out.println(uuid);
             return ResponseEntity.status(200).body(googleMapsService.getOptimalRoute(uuid));
         } catch (CourierNotFoundException | IOException e) {
             return ResponseEntity.status(405).build();
