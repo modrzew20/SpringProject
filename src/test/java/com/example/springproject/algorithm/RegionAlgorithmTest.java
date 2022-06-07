@@ -24,34 +24,28 @@ public class RegionAlgorithmTest {
 
     @BeforeEach
     void init() throws CantCreateRegionException, InvalidDataException {
-        regionService.createRegion("name", 30.0, 25.0, 30.0, 40.0);
+        regionService.createRegion("first", 20.0, 10.0, 10.0, 20.0);
     }
 
     @Test
-    public void createIncludingRegionTest() {
+    public void createRegionIncludingFirstRegionTest() {
         assertThrows(CantCreateRegionException.class, () -> {
-            regionService.createRegion("name2",40.0,20.0,40.0,50.0);
+            regionService.createRegion("second",30.0,5.0,5.0,25.0);
         });
     }
 
     @Test
     public void createOverlappingRegionTest() {
         assertThrows(CantCreateRegionException.class, () -> {
-            regionService.createRegion("name2",30.0,25.0,39.0,50.0);
-        });
-        assertDoesNotThrow( () -> {
-            regionService.createRegion("name", 30.0, 25.0, 30.0, 40.0);
-            regionService.createRegion("name2",30.0,25.0,40.0,45.0);
+            regionService.createRegion("name2",30.0,15.0,5.0,30.0);
         });
     }
     @Test
     public void createRegionTest() {
         assertThrows(CantCreateRegionException.class, () -> {
-            regionService.createRegion("name", 30.0, 25.0, 30.0, 41.0);
             regionService.createRegion("name2",30.0,25.0,40.0,50.0);
         });
         assertDoesNotThrow( () -> {
-            regionService.createRegion("name", 30.0, 25.0, 30.0, 40.0);
             regionService.createRegion("name2",30.0,25.0,40.0,45.0);
         });
     }
