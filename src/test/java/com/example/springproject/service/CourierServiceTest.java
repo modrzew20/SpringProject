@@ -40,18 +40,18 @@ public class CourierServiceTest {
     public void createCourierTest() {
         int size = courierService.allCourier().size();
         assertDoesNotThrow(() -> {
-            courierService.createCourier("test",34.2, 30.0,
+            courierService.createCourier("test","Drewnowska 58, 91-002 Łódź",
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
         assertEquals(size + 1, courierService.allCourier().size());
 
         assertThrows(CantCreateCourierException.class, () -> {
-            courierService.createCourier("test",34.2, 30.0,
+            courierService.createCourier("test","Drewnowska 58, 91-002 Łódź",
                     UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"));
         });
 
         assertThrows(RegionNotFoundException.class, () -> {
-            courierService.createCourier("test",34.2, 30.0,
+            courierService.createCourier("test","Drewnowska 58, 91-002 Łódź",
                     UUID.fromString("c0f09f98-9b22-4580-9c3d-a4273bf6327a"));
         });
 

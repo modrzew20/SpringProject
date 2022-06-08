@@ -28,6 +28,7 @@ public class RegionRepo implements AbstractRepo<Region>{
         this.create(new Region(UUID.fromString("c42f4dc3-5178-43f0-b9b9-1e42b094bd23"),"Region8",2,1,-0.5,0.5));
         this.create(new Region(UUID.fromString("b6d7bb81-732a-490e-bdf3-d3993bfe882b"),"Region9",-1,-2,-0.5,0.5));
         this.create(new Region(UUID.fromString("26699969-efc3-4099-9742-3c863be4a984"), "Lodz", 51.821809, 51.722660, 19.409147, 19.497900));
+        this.create(new Region(UUID.fromString("965dad1b-7f91-458b-89d9-d69208c51c2b"), "Zduńska Wola", 51.62478444724434, 51.57488279605384, 18.907664918072683, 18.98937573350237));
     }
 
 

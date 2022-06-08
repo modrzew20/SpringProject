@@ -6,6 +6,7 @@ import com.example.springproject.repository.repositoryExceptions.CourierNotFound
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
 import com.example.springproject.repository.repositoryExceptions.RegionNotFoundException;
 import com.example.springproject.service.CourierService;
+import com.example.springproject.service.GoogleMapsService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class CourierEndpoint {
     @Autowired
     private CourierService courierService;
 
+    @Autowired
+    private GoogleMapsService googleMapsService;
+
     @GetMapping("/courier")
     @CrossOrigin(origins = "*")
     ArrayList<Courier> allCourier() {
@@ -29,13 +33,13 @@ public class CourierEndpoint {
     @CrossOrigin(origins = "*")
     ResponseEntity<String> createCourier(
             @RequestParam("name") @NonNull String name,
-            @RequestParam @NonNull double startPointX,
-            @RequestParam @NonNull double startPointY,
+            @RequestParam @NonNull String address,
             @RequestParam @NonNull UUID regionUUID
     ){
         boolean status;
+        String fullAddress = googleMapsService.getFullAddress(address);
         try {
-            status = courierService.createCourier(name,startPointX, startPointY, regionUUID);
+            status = courierService.createCourier(name,fullAddress, regionUUID);
         } catch (CantCreateCourierException | RegionNotFoundException e) {
             return ResponseEntity.status(405).body(e.getMessage());
         }

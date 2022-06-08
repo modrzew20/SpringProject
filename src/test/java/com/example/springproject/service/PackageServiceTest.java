@@ -1,5 +1,6 @@
 package com.example.springproject.service;
 
+import com.example.springproject.model.Package;
 import com.example.springproject.repository.repositoryExceptions.ItemNotFoundException;
 import com.example.springproject.repository.repositoryExceptions.NoCourierForThisRegionException;
 import com.example.springproject.repository.repositoryExceptions.PackageNotFoundException;
@@ -25,28 +26,10 @@ public class PackageServiceTest {
     @Autowired
     private PackageService packageService;
 
-    @Test
-    public void findPackageTest() throws PackageNotFoundException {
-        assertEquals(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),
-                packageService.findPackage(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5")).getUuid());
-        assertThrows(PackageNotFoundException.class, () -> {
-            packageService.findPackage(null);
-        });
-    }
+    @Autowired
+    private CourierService courierService;
 
-    @Test
-    public void getPackagesAssignToCourierTest() {
-        assertEquals(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5"),
-                packageService.getPackagesAssignToCourier(UUID.fromString("88eef4a2-3ca5-4bcf-b569-6f2ec20f483c")).get(0).getUuid());
-    }
 
-    @Test
-    public void deletePackageTest() throws PackageNotFoundException {
-        int size = packageService.allPackage().size();
-        assertTrue(packageService.deletePackage(UUID.fromString("2a9dc82c-bfc1-47db-b037-3569d3949ef5")));
-        assertEquals(size - 1, packageService.allPackage().size());
-
-    }
 
     @Test
     public void createPackageTest() throws NoCourierForThisRegionException, ItemNotFoundException {
@@ -54,4 +37,40 @@ public class PackageServiceTest {
         assertTrue(packageService.createPackage(2,1,"test street",100.0,"test","johnny",true, true));
         assertEquals(size + 1, packageService.allPackage().size());
     }
+
+    @Test
+    public void deletePackageTest() throws PackageNotFoundException {
+        int size = packageService.allPackage().size();
+        assertTrue(packageService.deletePackage(packageService.allPackage().get(0).getUuid()));
+        assertEquals(size - 1, packageService.allPackage().size());
+
+    }
+
+    @Test
+    public void findPackageTest() throws PackageNotFoundException {
+        UUID uuid = packageService.allPackage().get(0).getUuid();
+        assertEquals(uuid,
+                packageService.findPackage(uuid).getUuid());
+        assertThrows(PackageNotFoundException.class, () -> {
+            packageService.findPackage(null);
+        });
+    }
+
+    @Test
+    public void getPackagesAssignToCourierTest() {
+        UUID uuid = courierService.allCourier().get(0).getUuid();
+        int size = 0;
+        for (Package p : packageService.allPackage()) {
+            if(p.getCourier().equals(uuid)) {
+               size++;
+            }
+        }
+        assertEquals(size, packageService.getPackagesAssignToCourier(uuid).size());
+    }
+
+
+
+
+
+
 }

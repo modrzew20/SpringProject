@@ -95,9 +95,8 @@ public class GoogleMapsService {
     public ArrayList<Package> getOptimalRoute(UUID uuid) throws IOException, CourierNotFoundException {
 
         ArrayList<Package> packages = packageService.getPackagesAssignToCourier(uuid);
-        StringBuilder url = new StringBuilder(GET_URL + "origin=" + courierRepo.find(uuid).getStartPointX() + "," +  courierRepo.find(uuid).getStartPointY()
-                + "&destination=" +  courierRepo.find(uuid).getStartPointX() + "," +  courierRepo.find(uuid).getStartPointY()
-                + "&waypoints=optimize:true|");
+        StringBuilder url = new StringBuilder(GET_URL + "origin=" + courierRepo.find(uuid).getAddress()
+                + "&destination=" +  courierRepo.find(uuid).getAddress() + "&waypoints=optimize:true|");
 
         for (Package i : packages) {
             url.append(i.getAddress()).append("|");

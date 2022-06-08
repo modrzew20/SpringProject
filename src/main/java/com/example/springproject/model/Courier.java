@@ -15,10 +15,7 @@ public class Courier {
     String name;
 
     @Getter @Setter @NonNull
-    double startPointX;
-
-    @Getter @Setter @NonNull
-    double startPointY;
+    String address;
 
     @Getter @Setter @NonNull
     UUID region;
