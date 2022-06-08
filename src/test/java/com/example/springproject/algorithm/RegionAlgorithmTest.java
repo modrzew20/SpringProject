@@ -47,19 +47,12 @@ public class RegionAlgorithmTest {
         assertThrows(CantCreateRegionException.class, () -> {
             regionService.createRegion("Region3NE",30.0,15.0,15.0,30.0);
         });
-        // pokrywa się jedna ściana regionu
-        assertDoesNotThrow(() -> {
-            regionService.createRegion("Region4NE",20.0,10.0,20.0,30.0);
-        });
 
         // SW
         assertThrows(CantCreateRegionException.class, () -> {
             regionService.createRegion("Region3SW",-15.0,-30.0,-30.0,-15.0);
         });
-
-        assertDoesNotThrow(() -> {
-            regionService.createRegion("Region4SW",-10.0,-20.0,-30.0,-20.0);
-        });
+        
     }
 
     @Test
