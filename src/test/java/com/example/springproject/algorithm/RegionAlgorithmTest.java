@@ -119,4 +119,26 @@ public class RegionAlgorithmTest {
             regionService.createRegion("Region9SW", -15.0, -20.0, -20.0, -10.0);
         });
     }
+    @Test
+    public void createRegionCrosingFirstRegionTest() {
+        //region przechodzi przez pierwszy region po długości
+        assertThrows(CantCreateRegionException.class, () -> {
+            regionService.createRegion("Region9NE", 22.0, 8.0, 12.0, 15.0);
+        });
+        //SW
+        assertThrows(CantCreateRegionException.class, () -> {
+            regionService.createRegion("Region9SW", -8.0, -22.0, -15.0, -12.0);
+        });
+    }
+    @Test
+    public void createRegionCrosingFirstRegionSecondTest() {
+        //region przechodzi przez pierwszy region po szerokosci
+        assertThrows(CantCreateRegionException.class, () -> {
+            regionService.createRegion("Region10NE", 18.0, 12.0, 8.0, 22.0);
+        });
+        //SW
+        assertThrows(CantCreateRegionException.class, () -> {
+            regionService.createRegion("Region10SW", -12.0, -18.0, -22.0, -8.0);
+        });
+    }
 }
